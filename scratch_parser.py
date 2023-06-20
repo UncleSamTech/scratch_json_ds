@@ -8,8 +8,6 @@ def parse_json(file_path):
     string_to_parse = Path(file_path).read_text()
     data = json.loads(string_to_parse) 
     dict_keys = []
-    dict_keys_type = []
-    scratch_dict = {}
     dict_value = []
     scratch_keys = data.keys()
     for i in scratch_keys:
