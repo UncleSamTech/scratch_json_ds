@@ -19,4 +19,5 @@ def parse_json(file_path):
                         dict_keys.append(keys)
                         dict_value.append(value)
 
+
 parse_json('json_files/actual_response.json')
