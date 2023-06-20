@@ -9,25 +9,16 @@ def parse_json(file_path):
     data = json.loads(string_to_parse) 
     dict_keys = []
     dict_keys_type = []
+    scratch_dict = {}
+    dict_value = []
     scratch_keys = data.keys()
-    #print(scratch_keys)
     for i in scratch_keys:
         if len(data[i]) > 0:
             for j in data[i]:
                 if isinstance(j,dict):
-                    for keys in j:
+                    for keys,value in j.items():
+                        print(keys , '->' , value)
                         dict_keys.append(keys)
-                        dict_keys_type.append(type(j[keys]))
+                        dict_value.append(value)
 
-            print(dict_keys)
-            print(dict_keys_type)
-            
-           
-            
-
-
-   # print('extensions_count' , extensions_count)
-   # print('targets_count ' , targets_count)
-    #print('monitors_count' , monitors_count)
-    #print('meta_count' , meta_count)
 parse_json('json_files/actual_response.json')
