@@ -17,17 +17,40 @@ class scratch_processor:
         self.json_data = ""
 
     
+    
+    def decide_next_steps(self,value):
+            if type(value) is str:
+                print('string datatype with value ',value)
+            elif type(value) is int:
+                print('int datatype with ', value)
+            elif type(value) is dict:
+                #self.extract_dict_values(value)
+                for keys,values in value.items():
+                    print(keys , '->', values)
+                    self.dict_key_list.append(keys)
+                    self.dict_value_list.append(values)
+            elif type(value) is bool:
+                print('bool datatype with value', value)
+            elif type(value) is list:
+                #self.extract_list_values(value)
+                for each_val in value:
+                    print('item is' , each_val)
+            else:
+                print('unknown data structure')
+
+
     def extract_dict_values(self,value):
-        if isinstance(value,dict):
-            for keys,values in value.items():
-                print(keys , '->', values)
-                self.dict_key_list.append(keys)
-                self.dict_value_list.append(values)
+        for keys,values in value.items():
+            print(keys , '->', values)
+            self.dict_key_list.append(keys)
+            self.dict_value_list.append(values)
+            self.decide_next_steps(value)
 
     def extract_list_values(self, values):
-        if isinstance(values, list) and len(values) > 0:
-            for each_val in values:
-                print('item is' , each_val)
+        for each_val in values:
+            print('item is' , each_val)
+            self.decide_next_steps(values)
+                
 
     
 
@@ -42,18 +65,8 @@ class scratch_processor:
                         for keys,value in j.items():
                             self.second_keys_list.append(keys)
                             self.second_value_list.append(value)
-                            if type(value) is str:
-                                print(keys ,'is string datatype with value ',value)
-                            elif type(value) is int:
-                                print(keys , 'is an int datatype with ', value)
-                            elif type(value) is dict:
-                                self.extract_dict_values(value)
-                            elif type(value) is bool:
-                                print(keys, 'is a bool datatype with value', value)
-                            elif type(value) is list:
-                                self.extract_list_values(value)
-                            else:
-                                print('unknown data structure')
+                            self.decide_next_steps(value)
+                            
     
 
    
@@ -65,3 +78,4 @@ class scratch_processor:
 
 scratch_processor_class = scratch_processor()
 scratch_processor_class.parse_json('json_files/actual_response.json')
+
