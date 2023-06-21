@@ -18,7 +18,10 @@ class scratch_processor:
         self.variables_value =[]
         self.variables_key = []
 
-    
+    def check_key_match(self, values, match):
+        self.top_keys_list = values.keys()
+        return True if match in self.top_keys_list and len(self.top_keys_list) > 0 else False
+
     
     def decide_next_steps(self,value):
             if type(value) is str:
@@ -45,7 +48,6 @@ class scratch_processor:
             else:
                 print('unknown data structure')
 
-
     def extract_dict_values(self,value):
         for keys,values in value.items():
             print(keys , '->', values)
@@ -58,10 +60,9 @@ class scratch_processor:
             print('item is' , each_val)
             self.decide_next_steps(values)
                 
-
     def get_variables(self, values):
         self.top_keys_list = values.keys()
-        if "targets" in self.top_keys_list and len(self.top_keys_list) > 0:
+        if self.check_key_match(values,"targets"):
             stored_targets = values["targets"]
             for dict_values in stored_targets:
                 if isinstance(dict_values, dict) and "variables" in dict_values.keys():
@@ -71,9 +72,6 @@ class scratch_processor:
                         self.variables_key.append(var_key)
         print(self.variables_key, '->', self.variables_value)
         return self.variables_key, self.variables_value
-
-
-
 
 
     def parse_json(self,file_path):
