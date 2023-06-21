@@ -22,7 +22,12 @@ class scratch_processor:
         self.top_keys_list = values.keys()
         return True if match in self.top_keys_list and len(self.top_keys_list) > 0 else False
 
-    
+    def get_targets(self,values,match):
+        if(self.check_key_match(values,match)):
+            return values["targets"]
+        else:
+            return None
+        
     def decide_next_steps(self,value):
             if type(value) is str:
                 print('string datatype with value ',value)
@@ -61,18 +66,22 @@ class scratch_processor:
             self.decide_next_steps(values)
                 
     def get_variables(self, values):
-        self.top_keys_list = values.keys()
-        if self.check_key_match(values,"targets"):
-            stored_targets = values["targets"]
-            for dict_values in stored_targets:
-                if isinstance(dict_values, dict) and "variables" in dict_values.keys():
-                    stored_var = dict_values['variables']
-                    for var_key, valu in stored_var.items():
-                        self.variables_value.append(valu)
-                        self.variables_key.append(var_key)
+        stored_targets = self.get_targets(values,"targets")
+        for dict_values in stored_targets:
+            if isinstance(dict_values, dict) and "variables" in dict_values.keys():
+                stored_var = dict_values['variables']
+                for var_key, valu in stored_var.items():
+                    self.variables_value.append(valu)
+                    self.variables_key.append(var_key)
         print(self.variables_key, '->', self.variables_value)
         return self.variables_key, self.variables_value
 
+    def get_costumes(self,values):
+        stored_targets = self.get_targets(values,"targets")
+        for dict_values in stored_targets:
+            if isinstance(dict_values, dict) and "costumes" in dict_values.keys():
+                stored_costumes = dict_values['costumes']
+                print(stored_costumes)
 
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
@@ -86,7 +95,8 @@ class scratch_processor:
                             self.second_keys_list.append(keys)
                             self.second_value_list.append(value)
                             #self.decide_next_steps(value)
-        self.get_variables(self.json_data)                    
+        #self.get_variables(self.json_data)  
+        self.get_costumes(self.json_data)                  
     
 
    
