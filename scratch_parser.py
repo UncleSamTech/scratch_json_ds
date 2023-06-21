@@ -88,6 +88,22 @@ class scratch_processor:
                     stored_val = dict_values[unique_key]
                     print(stored_val)
 
+    def get_monitors(self,values,match):
+        if self.check_key_match(values,match):
+            print(values["monitors"])
+            if len(values["monitors"]) > 0:
+                for i in values["monitors"]:
+                    if isinstance(i,dict) and "params" in i.keys():
+                        par_dict = i["params"]
+                        for par_key, par_value in par_dict.items():
+                            print(par_key, '->', par_value)
+                    else:
+                        print(i)
+
+            return values["monitors"]
+        else:
+            return None
+
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
         self.json_data = json.loads(string_to_parse) 
@@ -99,8 +115,9 @@ class scratch_processor:
                         for keys,value in j.items():
                             self.second_keys_list.append(keys)
                             self.second_value_list.append(value)              
-        self.get_costumes_sounds(self.json_data,"costumes")     
-        #self.get_variables(self.json_data)            
+        self.get_costumes_sounds(self.json_data,"costumes")   
+        self.get_monitors(self.json_data,"monitors")  
+        self.get_variables(self.json_data)            
     
 
 scratch_processor_class = scratch_processor()
