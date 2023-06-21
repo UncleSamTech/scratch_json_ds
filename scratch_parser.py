@@ -35,6 +35,11 @@ class scratch_processor:
                 #self.extract_list_values(value)
                 for each_val in value:
                     print('item is' , each_val)
+                    if isinstance(each_val,dict):
+                        for keys,values in each_val.items():
+                            print(keys , 'second_level->', values)
+                    #self.dict_key_list.append(keys)
+                    #self.dict_value_list.append(values)
             else:
                 print('unknown data structure')
 
