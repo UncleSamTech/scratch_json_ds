@@ -82,10 +82,11 @@ class scratch_processor:
 
     def get_costumes_sounds(self,values,unique_key):
         stored_targets = self.get_targets(values,"targets")
-        for dict_values in stored_targets:
-            if isinstance(dict_values, dict) and unique_key in dict_values.keys():
-                stored_val = dict_values[unique_key]
-                print(stored_val)
+        if self.check_targets(values,"targets"):
+            for dict_values in stored_targets:
+                if isinstance(dict_values, dict) and unique_key in dict_values.keys():
+                    stored_val = dict_values[unique_key]
+                    print(stored_val)
 
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
@@ -98,8 +99,8 @@ class scratch_processor:
                         for keys,value in j.items():
                             self.second_keys_list.append(keys)
                             self.second_value_list.append(value)              
-        #self.get_costumes_sounds(self.json_data,"costumes")     
-        self.get_variables(self.json_data)            
+        self.get_costumes_sounds(self.json_data,"costumes")     
+        #self.get_variables(self.json_data)            
     
 
 scratch_processor_class = scratch_processor()
