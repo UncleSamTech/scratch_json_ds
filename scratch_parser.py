@@ -28,6 +28,9 @@ class scratch_processor:
         else:
             return None
         
+    def check_targets(self,values, match):
+        return True if self.get_targets(values,match) is not None else False
+    
     def decide_next_steps(self,value):
             if type(value) is str:
                 print('string datatype with value ',value)
@@ -67,15 +70,15 @@ class scratch_processor:
                 
     def get_variables(self, values):
         stored_targets = self.get_targets(values,"targets")
-        for dict_values in stored_targets:
-            if isinstance(dict_values, dict) and "variables" in dict_values.keys():
-                stored_var = dict_values['variables']
-                for var_key, valu in stored_var.items():
-                    self.variables_value.append(valu)
-                    self.variables_key.append(var_key)
+        if self.check_targets(values,"targets"):
+            for dict_values in stored_targets:
+                if isinstance(dict_values, dict) and "variables" in dict_values.keys():
+                    stored_var = dict_values['variables']
+                    for var_key, valu in stored_var.items():
+                        self.variables_value.append(valu)
+                        self.variables_key.append(var_key)
         print(self.variables_key, '->', self.variables_value)
         return self.variables_key, self.variables_value
-
 
     def get_costumes_sounds(self,values,unique_key):
         stored_targets = self.get_targets(values,"targets")
@@ -94,19 +97,10 @@ class scratch_processor:
                     if isinstance(j,dict):
                         for keys,value in j.items():
                             self.second_keys_list.append(keys)
-                            self.second_value_list.append(value)
-                            #self.decide_next_steps(value)
-        #self.get_variables(self.json_data)  
-        #self.get_costumes_sounds(self.json_data,"sounds")                 
-        self.get_costumes_sounds(self.json_data,"costumes")                 
+                            self.second_value_list.append(value)              
+        #self.get_costumes_sounds(self.json_data,"costumes")     
+        self.get_variables(self.json_data)            
     
-
-   
-
-
-
-                        
-
 
 scratch_processor_class = scratch_processor()
 scratch_processor_class.parse_json('json_files/actual_response.json')
