@@ -1,7 +1,8 @@
 import json
 import os
-import collections
+import random
 from pathlib import Path
+from treelib import Node, Tree
 
 
 class scratch_processor:
@@ -17,10 +18,14 @@ class scratch_processor:
         self.json_data = ""
         self.variables_value =[]
         self.variables_key = []
+        self.blocks_object = []
 
     def check_key_match(self, values, match):
         self.top_keys_list = values.keys()
         return True if match in self.top_keys_list and len(self.top_keys_list) > 0 else False
+    
+    def gen_rand_numb(self):
+        return random.randint(0,8638)
 
     def get_targets(self,values,match):
         if(self.check_key_match(values,match)):
@@ -104,17 +109,37 @@ class scratch_processor:
         else:
             return None
 
+    def create_tree(self, blocks):
+        tree = Tree()
+        tree.create_node('scratch_block_tree','mia',data=blocks)
+        if bool(blocks):
+            for key, value in blocks.items():
+                if isinstance(value, dict) and bool(value):
+                    tree.create_node(key, key,parent='mia',data=value)
+                    for sec_key, sec_value in value.items():
+                        par_key = sec_key+str(self.gen_rand_numb())
+                        sec_key_gen = sec_key+str(self.gen_rand_numb()) + sec_key
+                        tree.create_node(sec_key,par_key,parent=key,data=sec_value)
+                        tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
+                       #print('d')
+        return tree.show()
+
+
     def get_block_objects(self,values,match):
         stored_targets = self.get_targets(values, match)
         if self.check_targets(values, match):
             for dict_values in stored_targets:
                 if isinstance(dict_values,dict) and "blocks" in dict_values.keys():
                     blocks_stor = dict_values["blocks"]
+                    self.create_tree(blocks_stor)
                     for blocks_key, blocks_value in blocks_stor.items():
                         if isinstance(blocks_value, dict):
-                            for sec_key, sec_value in blocks_value.items():
-                                print(blocks_key, 'top_key->', sec_key, '->' , sec_value)
-                        
+                            #for sec_key, sec_value in blocks_value.items():
+                                #print(blocks_key, 'top_key->', sec_key, '->' , sec_value)
+                            self.blocks_object.append(blocks_value)
+                            #print(blocks_key, '->', blocks_value)
+                    #print(blocks_stor)
+          
 
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
@@ -130,7 +155,8 @@ class scratch_processor:
         #self.get_costumes_sounds(self.json_data,"costumes")   
         #self.get_monitors(self.json_data,"monitors")  
         #self.get_variables(self.json_data)   
-        self.get_block_objects(self.json_data, "targets")         
+        self.get_block_objects(self.json_data, "targets")   
+        #self.create_tree(self.json_data,"targets")      
     
 
 scratch_processor_class = scratch_processor()
