@@ -104,6 +104,18 @@ class scratch_processor:
         else:
             return None
 
+    def get_block_objects(self,values,match):
+        stored_targets = self.get_targets(values, match)
+        if self.check_targets(values, match):
+            for dict_values in stored_targets:
+                if isinstance(dict_values,dict) and "blocks" in dict_values.keys():
+                    blocks_stor = dict_values["blocks"]
+                    for blocks_key, blocks_value in blocks_stor.items():
+                        if isinstance(blocks_value, dict):
+                            for sec_key, sec_value in blocks_value.items():
+                                print(blocks_key, 'top_key->', sec_key, '->' , sec_value)
+                        
+
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
         self.json_data = json.loads(string_to_parse) 
@@ -115,9 +127,10 @@ class scratch_processor:
                         for keys,value in j.items():
                             self.second_keys_list.append(keys)
                             self.second_value_list.append(value)              
-        self.get_costumes_sounds(self.json_data,"costumes")   
-        self.get_monitors(self.json_data,"monitors")  
-        self.get_variables(self.json_data)            
+        #self.get_costumes_sounds(self.json_data,"costumes")   
+        #self.get_monitors(self.json_data,"monitors")  
+        #self.get_variables(self.json_data)   
+        self.get_block_objects(self.json_data, "targets")         
     
 
 scratch_processor_class = scratch_processor()
