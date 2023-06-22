@@ -117,10 +117,10 @@ class scratch_processor:
                 if isinstance(value, dict) and bool(value):
                     tree.create_node(key, key,parent='mia',data=value)
                     for sec_key, sec_value in value.items():
-                        par_key = sec_key+str(self.gen_rand_numb())
-                        sec_key_gen = sec_key+str(self.gen_rand_numb()) + sec_key
+                        par_key = sec_key+str(self.gen_rand_numb()) + sec_key + str(self.gen_rand_numb())
+                        sec_key_gen = sec_key+str(self.gen_rand_numb()) + sec_key + sec_key + str(self.gen_rand_numb())
                         tree.create_node(sec_key,par_key,parent=key,data=sec_value)
-                        tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
+                        #tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
                        #print('d')
         return tree.show()
 
