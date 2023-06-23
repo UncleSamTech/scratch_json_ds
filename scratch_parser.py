@@ -3,6 +3,7 @@ import os
 import random
 from pathlib import Path
 from treelib import Node, Tree
+import time
 
 
 class scratch_processor:
@@ -26,6 +27,9 @@ class scratch_processor:
     
     def gen_rand_numb(self):
         return random.randint(0,8638)
+    
+    def gen_uniq_value(self):
+        return str(random.randint(0,8638) *  round(time.time() * 1000) *  random.randint(0,8789) * round(time.time() * 1000))
 
     def get_targets(self,values,match):
         if(self.check_key_match(values,match)):
@@ -124,6 +128,26 @@ class scratch_processor:
                        #print('d')
         return tree.show()
 
+    def create_main_tree(self,blocks):
+        if bool(blocks) and isinstance(blocks,dict):
+            tree = Tree()
+            tree.create_node('scratch_blocks','parent_block', data=blocks)
+            par_id = self.gen_uniq_value()
+            print(par_id)
+            for parent_keys, parent_values in blocks.items():
+                main_parent_id = parent_keys+par_id
+                tree.create_node(parent_keys,main_parent_id,parent='parent_block',data=blocks)
+                if isinstance(parent_values,dict) and bool(parent_values):
+                    for second_key,second_values in parent_values.items():
+                        second_parent_id = second_key+par_id
+                        tree.create_node(second_key,second_parent_id,parent=main_parent_id,data=second_values)
+                elif isinstance(parent_values,list) and len(parent_values) > 0:
+                    for each_second_value in parent_values:
+                        if isinstance(each_second_value,dict):
+                            for third_key,third_value in each_second_value.items():
+                                tree.create_node(third_key,third_key+par_id+third_key,parent=main_parent_id,data=third_value)
+                        #tree.create_node(each_second_value, parent=main_parent_id,data=each_second_value)               
+            tree.show()
 
     def get_block_objects(self,values,match):
         stored_targets = self.get_targets(values, match)
@@ -144,6 +168,7 @@ class scratch_processor:
     def parse_json(self,file_path):
         string_to_parse = Path(file_path).read_text()
         self.json_data = json.loads(string_to_parse) 
+        self.create_main_tree(self.json_data)
         self.top_keys_list = self.json_data.keys()
         for i in self.top_keys_list:
             if len(self.json_data[i]) > 0:
@@ -155,8 +180,9 @@ class scratch_processor:
         #self.get_costumes_sounds(self.json_data,"costumes")   
         #self.get_monitors(self.json_data,"monitors")  
         #self.get_variables(self.json_data)   
-        self.get_block_objects(self.json_data, "targets")   
-        #self.create_tree(self.json_data,"targets")      
+        #self.get_block_objects(self.json_data, "targets")   
+        #self.create_tree(self.json_data,"targets")     
+        
     
 
 scratch_processor_class = scratch_processor()
