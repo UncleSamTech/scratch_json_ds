@@ -127,7 +127,7 @@ class scratch_processor:
                         tree.create_node(sec_key,par_key,parent=key,data=sec_value)
                         #tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
                        #print('d')
-        return tree.show()
+        return tree
 
     def create_main_tree(self,blocks):
         if bool(blocks) and isinstance(blocks,dict):
@@ -136,20 +136,52 @@ class scratch_processor:
             par_id = self.gen_uniq_value()
             print(par_id)
             for parent_keys, parent_values in blocks.items():
-                main_parent_id = parent_keys+par_id
+                main_parent_id = str(uuid.uuid4())
                 tree.create_node(parent_keys,main_parent_id,parent='parent_block',data=blocks)
                 if isinstance(parent_values,dict) and bool(parent_values):
                     for second_key,second_values in parent_values.items():
-                        second_parent_id = second_key+par_id
+                        second_parent_id = str(uuid.uuid4()) + par_id
+                        sec_par_val_id = str(uuid.uuid4()) + par_id + str(uuid.uuid4())
                         tree.create_node(second_key,second_parent_id,parent=main_parent_id,data=second_values)
+                        tree.create_node(second_values,sec_par_val_id,parent=main_parent_id,data=second_values)
+                        if isinstance(second_values,dict) and len(second_values) > 0:
+                            for sec_third_key,sec_third_value in second_values.items():
+                                sec_third_par_val_id = str(uuid.uuid4()) + par_id + str(uuid.uuid4()) + par_id
+                                tree.create_node(sec_third_key,sec_third_par_val_id,parent=sec_par_val_id,data=sec_third_value)  
+                                tree.create_node(sec_third_value,sec_third_par_val_id,parent=sec_par_val_id,data=sec_third_value)
+
+
                 elif isinstance(parent_values,list) and len(parent_values) > 0:
                     for each_second_value in parent_values:
                         if isinstance(each_second_value,dict):
                             for third_key,third_value in each_second_value.items():
-                                third_par_id = str(uuid.uuid4())
+                                third_par_id = str(uuid.uuid4()) + par_id + str(uuid.uuid4()) + par_id
                                 
                                 tree.create_node(third_key,third_par_id,parent=main_parent_id,data=third_value)
-                                tree.create_node(third_value,parent=third_par_id,data=third_value)
+                else:
+                    tree.create_node(parent_values,parent=main_parent_id,data=parent_values)
+      
+
+                                #tree.create_node(third_value,parent=third_par_id,data=third_value)
+                                #if isinstance(third_value, dict) and bool(third_value):
+                                    #for fourth_key, fourth_value in third_value.items():
+                                        #fourth_par_id =  str(uuid.uuid4()) + par_id
+                                        #fourth_par_id_val = fourth_par_id+par_id
+                                        #tree.create_node(fourth_key,fourth_par_id,parent=third_par_id,data=fourth_value)
+                                        #tree.create_node(fourth_value,fourth_par_id_val,parent=fourth_par_id,data=fourth_value)
+                                        #if isinstance(fourth_value,dict) and bool(fourth_value):
+                                           # for fifth_dict_key, fifth_dict_value in fourth_value.items():
+                                                #fifth_par_id = str(uuid.uuid4()) + par_id
+                                               # tree.create_node(fifth_dict_key,fifth_par_id,parent=fourth_par_id_val,data=fifth_dict_value)
+                                #elif isinstance(third_value,list) and len(third_value) > 0:
+                                    #for fourth_list_value in third_value:
+                                        #if isinstance(fourth_list_value, dict) and bool(fourth_list_value):
+                                            #for fifth_key, fifth_value in fourth_list_value.items():
+                                               # fifth_par_id = str(uuid.uuid4()) + par_id + par_id
+                                            #tree.create_node(fifth_key,fifth_par_id,data=fifth_value,parent=third_par_id)
+                                #else:
+                                   # tree.create_node(third_value,parent=third_par_id,data=third_value)
+
                         #tree.create_node(each_second_value, parent=main_parent_id,data=each_second_value)               
             tree.show()
 
@@ -191,4 +223,3 @@ class scratch_processor:
 
 scratch_processor_class = scratch_processor()
 scratch_processor_class.parse_json('json_files/actual_response.json')
-
