@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 import random
 from pathlib import Path
 from treelib import Node, Tree
@@ -145,7 +146,10 @@ class scratch_processor:
                     for each_second_value in parent_values:
                         if isinstance(each_second_value,dict):
                             for third_key,third_value in each_second_value.items():
-                                tree.create_node(third_key,third_key+par_id+third_key,parent=main_parent_id,data=third_value)
+                                third_par_id = str(uuid.uuid4())
+                                
+                                tree.create_node(third_key,third_par_id,parent=main_parent_id,data=third_value)
+                                tree.create_node(third_value,parent=third_par_id,data=third_value)
                         #tree.create_node(each_second_value, parent=main_parent_id,data=each_second_value)               
             tree.show()
 
