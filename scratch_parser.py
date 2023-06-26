@@ -151,8 +151,9 @@ class scratch_processor:
                                 tree.create_node(sec_third_value,sec_third_par_val_id,parent=sec_par_val_id,data=sec_third_value)
                                 if isinstance(sec_third_value,dict) and bool(sec_third_value):
                                     for sec_fourth_key, sec_fourth_val in sec_third_value.items():
-                        
-                                        tree.create_node(sec_fourth_key,sec_fourth_val,parent=sec_third_par_val_id,data=sec_fourth_val)
+                                        sec_fourth_id =  str(uuid.uuid4())
+                                        tree.create_node(sec_fourth_key,sec_fourth_id,parent=sec_third_par_val_id,data=sec_fourth_val)
+                                        tree.create_node(sec_fourth_val, str(uuid.uuid4()), parent=sec_fourth_id,data=sec_fourth_val)
                 
 
 
@@ -173,7 +174,6 @@ class scratch_processor:
                                             for fifth_dict_key, fifth_dict_value in fourth_value.items():
                                                 fifth_par_id = str(uuid.uuid4()) + par_id
                                                 tree.create_node(fifth_dict_key,fifth_par_id,parent=fourth_par_id_val,data=fifth_dict_value)
-                                                #tree.create_node(fifth_dict_value,str(uuid.uuid4()),parent=fifth_par_id,data=fifth_dict_value)
                                                 if isinstance(fifth_dict_value,dict) and bool(fifth_dict_value):
                                                     for sixth_key, sixth_value in fifth_dict_value.items():
                                                         print(sixth_key)
