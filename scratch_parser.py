@@ -1,11 +1,12 @@
 import json
 import os
+import sb3
 import uuid
 import random
 from pathlib import Path
 from treelib import Node, Tree
 import time
-
+import zipfile
 
 class scratch_processor:
 
@@ -128,6 +129,18 @@ class scratch_processor:
                         #tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
                        #print('d')
         return tree
+    
+    def unpack_sb3(self,sb3_file,sprite=False):
+        need = "project.json" if sprite else "project.json"
+        with zipfile.ZipFile(sb3_file) as sb3zip:
+            names = sb3zip.namelist()
+            if need not in names:
+                print('sprite3 must contain sprite.json')
+            else:
+                json_file = json.loads(sb3zip.read(need).decode("utf-8"))
+                dum = json.dumps(json_file)
+                return dum
+                #return json.dumps(json_file)
 
     def create_main_tree(self,blocks):
         tree = Tree()
@@ -135,7 +148,6 @@ class scratch_processor:
             
             tree.create_node('scratch_blocks','parent_block', data=blocks)
             par_id = self.gen_uniq_value()
-            print(par_id)
             for parent_keys, parent_values in blocks.items():
                 main_parent_id = str(uuid.uuid4())
                 tree.create_node(parent_keys,main_parent_id,parent='parent_block',data=blocks)
@@ -175,7 +187,6 @@ class scratch_processor:
                                                 tree.create_node(fifth_dict_key,fifth_par_id,parent=fourth_par_id_val,data=fifth_dict_value)
                                                 if isinstance(fifth_dict_value,dict) and bool(fifth_dict_value):
                                                     for sixth_key, sixth_value in fifth_dict_value.items():
-                                                        print(sixth_key)
                                                         sixth_par_id = str(uuid.uuid4()) + par_id + fifth_par_id
                                                         tree.create_node(sixth_key,sixth_par_id, parent=fifth_par_id,data=sixth_value)
                                                         tree.create_node(sixth_value,str(uuid.uuid4()),parent=sixth_par_id,data=sixth_value)
@@ -202,7 +213,7 @@ class scratch_processor:
                 else:
                     tree.create_node(parent_values,parent=main_parent_id,data=parent_values)
                    
-            tree.show()
+            
         elif isinstance(blocks,list) and len(blocks) > 0:
             for sing_block in blocks:
                 if isinstance(sing_block,dict) and bool():
@@ -210,6 +221,7 @@ class scratch_processor:
                         sub_sing_block_id = str(uuid.uuid4())
                         tree.create_node(sub_sing_block_key,sub_sing_block_id,parent='list_block',data=sub_sing_block_value)
                         #tree.create_node(s)
+        tree.show()
 
     def get_block_objects(self,values,match):
         stored_targets = self.get_targets(values, match)
@@ -225,27 +237,18 @@ class scratch_processor:
                             self.blocks_object.append(blocks_value)
                             #print(blocks_key, '->', blocks_value)
                     #print(blocks_stor)
-          
+  
+        
 
     def parse_json(self,file_path):
-        string_to_parse = Path(file_path).read_text()
-        self.json_data = json.loads(string_to_parse) 
-        self.create_main_tree(self.json_data)
-        #self.top_keys_list = self.json_data.keys()
-        for i in self.top_keys_list:
-            if len(self.json_data[i]) > 0:
-                for j in self.json_data[i]:
-                    if isinstance(j,dict):
-                        for keys,value in j.items():
-                            self.second_keys_list.append(keys)
-                            self.second_value_list.append(value)              
-        #self.get_costumes_sounds(self.json_data,"costumes")   
-        #self.get_monitors(self.json_data,"monitors")  
-        #self.get_variables(self.json_data)   
-        #self.get_block_objects(self.json_data, "targets")   
-        #self.create_tree(self.json_data,"targets")     
+        string_to_parse2 = self.unpack_sb3(file_path)
+        print(string_to_parse2)
+        self.json_data = json.loads(string_to_parse2) 
+        self.create_main_tree(self.json_data)             
+        
         
     
 
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/another_response.json')
+scratch_processor_class.parse_json('json_files/complete_project.sb3')
+#scratch_processor_class.unpack_sb3("json_files/complete_project.sb3")
