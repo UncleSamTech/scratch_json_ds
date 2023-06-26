@@ -130,8 +130,9 @@ class scratch_processor:
         return tree
 
     def create_main_tree(self,blocks):
+        tree = Tree()
         if bool(blocks) and isinstance(blocks,dict):
-            tree = Tree()
+            
             tree.create_node('scratch_blocks','parent_block', data=blocks)
             par_id = self.gen_uniq_value()
             print(par_id)
@@ -155,8 +156,6 @@ class scratch_processor:
                                         tree.create_node(sec_fourth_key,sec_fourth_id,parent=sec_third_par_val_id,data=sec_fourth_val)
                                         tree.create_node(sec_fourth_val, str(uuid.uuid4()), parent=sec_fourth_id,data=sec_fourth_val)
                 
-
-
                 elif isinstance(parent_values,list) and len(parent_values) > 0:
                     for each_second_value in parent_values:
                         if isinstance(each_second_value,dict) and bool(each_second_value):
@@ -204,6 +203,13 @@ class scratch_processor:
                     tree.create_node(parent_values,parent=main_parent_id,data=parent_values)
                    
             tree.show()
+        elif isinstance(blocks,list) and len(blocks) > 0:
+            for sing_block in blocks:
+                if isinstance(sing_block,dict) and bool():
+                    for sub_sing_block_key, sub_sing_block_value in sing_block:
+                        sub_sing_block_id = str(uuid.uuid4())
+                        tree.create_node(sub_sing_block_key,sub_sing_block_id,parent='list_block',data=sub_sing_block_value)
+                        #tree.create_node(s)
 
     def get_block_objects(self,values,match):
         stored_targets = self.get_targets(values, match)
@@ -225,7 +231,7 @@ class scratch_processor:
         string_to_parse = Path(file_path).read_text()
         self.json_data = json.loads(string_to_parse) 
         self.create_main_tree(self.json_data)
-        self.top_keys_list = self.json_data.keys()
+        #self.top_keys_list = self.json_data.keys()
         for i in self.top_keys_list:
             if len(self.json_data[i]) > 0:
                 for j in self.json_data[i]:
@@ -242,4 +248,4 @@ class scratch_processor:
     
 
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/actual_response.json')
+scratch_processor_class.parse_json('json_files/another_response.json')

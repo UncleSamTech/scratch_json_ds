@@ -1,13 +1,12 @@
 [
   {
     targets: [ [Object], [Object] ],
-    monitors: [],
+    monitors: [ [Object], [Object], [Object] ],
     extensions: [],
     meta: {
       semver: '3.0.0',
       vm: '0.2.0-prerelease.20220222132735',
-      agent: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Scratch/3.29.1 Chrome/94.0.4606.81 
-Electron/15.3.1 Safari/537.36'
+      agent: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Scratch/3.29.1 Chrome/94.0.4606.81 Electron/15.3.1 Safari/537.36'
     },
     projectVersion: 3
   },
@@ -18,7 +17,8 @@ Electron/15.3.1 Safari/537.36'
       '83c36d806dc92327b9e7049a565c6bff.wav': [Object],
       'cd21514d0531fdffb22204e0ec5ed84a.svg': [Object],
       'bcf454acf82e4504149f7ffe07081dbc.svg': [Object],
-      '0fb9be3e8397c983338cb71dc84d0b25.svg': [Object]
+      '0fb9be3e8397c983338cb71dc84d0b25.svg': [Object],
+      '5393c3a5579a78ac32a7ecc93c615512.png': [Object]
     },
     comment: null,
     root: '',
