@@ -233,12 +233,11 @@ class scratch_processor:
     def parse_json(self,file_path):
         string_to_parse2 = self.unpack_sb3(file_path)
         self.json_data = json.loads(string_to_parse2) 
-        print(string_to_parse2)
         self.create_main_tree(self.json_data)             
         
         
     
 
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/simple.sb3')
+scratch_processor_class.parse_json('json_files/simplest.sb3')
 
