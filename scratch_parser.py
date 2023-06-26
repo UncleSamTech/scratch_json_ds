@@ -48,7 +48,6 @@ class scratch_processor:
             elif type(value) is int:
                 print('int datatype with ', value)
             elif type(value) is dict:
-                #self.extract_dict_values(value)
                 for keys,values in value.items():
                     print(keys , '->', values)
                     self.dict_key_list.append(keys)
@@ -56,14 +55,11 @@ class scratch_processor:
             elif type(value) is bool:
                 print('bool datatype with value', value)
             elif type(value) is list:
-                #self.extract_list_values(value)
                 for each_val in value:
                     print('item is' , each_val)
                     if isinstance(each_val,dict):
                         for keys,values in each_val.items():
                             print(keys , 'second_level->', values)
-                    #self.dict_key_list.append(keys)
-                    #self.dict_value_list.append(values)
             else:
                 print('unknown data structure')
 
@@ -126,8 +122,6 @@ class scratch_processor:
                         par_key = sec_key+str(self.gen_rand_numb()) + sec_key + str(self.gen_rand_numb())
                         sec_key_gen = sec_key+str(self.gen_rand_numb()) + sec_key + sec_key + str(self.gen_rand_numb())
                         tree.create_node(sec_key,par_key,parent=key,data=sec_value)
-                        #tree.create_node(sec_value,sec_key_gen,parent=par_key,data=sec_value)
-                       #print('d')
         return tree
     
     def unpack_sb3(self,sb3_file,sprite=False):
@@ -137,10 +131,9 @@ class scratch_processor:
             if need not in names:
                 print('sprite3 must contain sprite.json')
             else:
-                json_file = json.loads(sb3zip.read(need).decode("utf-8"))
-                dum = json.dumps(json_file)
-                return dum
-                #return json.dumps(json_file)
+                json_file =  json.loads(sb3zip.read(need).decode("utf-8"))
+                return json.dumps(json_file)
+                
 
     def create_main_tree(self,blocks):
         tree = Tree()
@@ -220,7 +213,7 @@ class scratch_processor:
                     for sub_sing_block_key, sub_sing_block_value in sing_block:
                         sub_sing_block_id = str(uuid.uuid4())
                         tree.create_node(sub_sing_block_key,sub_sing_block_id,parent='list_block',data=sub_sing_block_value)
-                        #tree.create_node(s)
+                        
         tree.show()
 
     def get_block_objects(self,values,match):
@@ -232,23 +225,20 @@ class scratch_processor:
                     self.create_tree(blocks_stor)
                     for blocks_key, blocks_value in blocks_stor.items():
                         if isinstance(blocks_value, dict):
-                            #for sec_key, sec_value in blocks_value.items():
-                                #print(blocks_key, 'top_key->', sec_key, '->' , sec_value)
                             self.blocks_object.append(blocks_value)
-                            #print(blocks_key, '->', blocks_value)
-                    #print(blocks_stor)
+                           
   
         
 
     def parse_json(self,file_path):
         string_to_parse2 = self.unpack_sb3(file_path)
-        print(string_to_parse2)
         self.json_data = json.loads(string_to_parse2) 
+        print(string_to_parse2)
         self.create_main_tree(self.json_data)             
         
         
     
 
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/complete_project.sb3')
-#scratch_processor_class.unpack_sb3("json_files/complete_project.sb3")
+scratch_processor_class.parse_json('json_files/simple.sb3')
+
