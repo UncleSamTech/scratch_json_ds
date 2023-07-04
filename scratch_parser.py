@@ -4,7 +4,7 @@ import sb3
 import uuid
 import random
 from pathlib import Path
-from scratch_classifier import scratch_object
+from scratch_classifier import scratch_object,scratch_literal
 from treelib import Node, Tree
 import time
 import zipfile
@@ -23,6 +23,11 @@ class scratch_processor:
         self.variables_value =[]
         self.variables_key = []
         self.blocks_object = []
+        self.empty_dictionary = {}
+        self.scratch_type  = 'type'
+        self.scratch_value = 'value'
+        self.scratch_raw = 'raw'
+        self.scratch_count = 'count'
 
     def check_key_match(self, values, match):
         self.top_keys_list = values.keys()
@@ -263,21 +268,85 @@ class scratch_processor:
                 if isinstance(each_data,dict) and bool(each_data):
                    empty_dict =  each_data[block_match] 
         return empty_dict
-                                                        
+
+    def check_type(self,val):
+        if isinstance(val,str) or isinstance(val,int) or isinstance(val,bool) or val is None:
+            return "Literal"
+        elif isinstance(val,list):
+            return "Array"
+        elif isinstance(val,dict):
+            return "Object"
+        else:
+            return "Unknown"
+        
+    def check_lit_value(self,value_type,value):
+        lit_dict = {}
+        
+        if value_type == "Literal":
+            
+            lit_dict[self.scratch_type] = value_type
+            lit_dict[self.scratch_value] = value
+            lit_dict[self.scratch_raw] = f"\"{value}\""
+        elif value_type == "Array" or value_type == "Object":
+            lit_dict[self.scratch_type] = value_type
+            lit_dict[self.scratch_value] = value
+            lit_dict[self.scratch_count] = len(value)
+        else:
+            lit_dict[self.scratch_type] = value_type
+            lit_dict[self.scratch_value] = value
+        return lit_dict
+        
+        
+    def check_lit_key(self,value,key):
+        lit_key_dict = {}
+       
+        if isinstance(value,str) or isinstance(value,int) or isinstance(value,bool) or value is None:
+            lit_key_dict[self.scratch_type] = "Identifier"
+            lit_key_dict[self.scratch_value] = key
+            lit_key_dict[self.scratch_raw] = f"\"{key}\""
+        elif isinstance(value,dict):
+            lit_key_dict[self.scratch_type] = "Object"
+            lit_key_dict[self.scratch_value] = key
+            lit_key_dict[self.scratch_raw] = f"\"{key}\""
+            lit_key_dict[self.scratch_count] = len(value)
+        elif isinstance(value,list):
+            lit_key_dict[self.scratch_type] = "Array"
+            lit_key_dict[self.scratch_value] = key
+            lit_key_dict[self.scratch_raw] = f"\"{key}\""
+            lit_key_dict[self.scratch_count] = len(value)
+        else:
+            lit_key_dict[self.scratch_type] = "Unknown"
+            lit_key_dict[self.scratch_value] = key
+            lit_key_dict[self.scratch_raw] = f"\"{key}\""
+        return lit_key_dict
+
+                                                   
     def rec_extr_dict(self,blocks):
         tree = Tree()
         scratch_objects = scratch_object()
+      
         tree.create_node('','parent_block', data=blocks)
         if isinstance(blocks,dict) and bool(blocks):
             for key,value in blocks.items():
-                ano_key = scratch_objects.navigate_type_value(value)
+                sx_key = self.check_type(value) 
+                lit_dict = self.check_lit_value(sx_key,value)
+                ano_key = scratch_objects.navigate_type_value(sx_key,value)
+                lit_key_type = self.check_lit_key(value,key)
+
+
                 if isinstance(value,dict):
                    self.rec_extr_dict(value)
                 
                 else:
-                    sec_key =  str(uuid.uuid4())                    
-                    tree.create_node(ano_key,sec_key,parent='parent_block',data=value)
-                    tree.create_node(value,str(uuid.uuid4()),parent=sec_key,data=value)            
+                    sec_key =  str(uuid.uuid4()) 
+                      
+                    self.empty_dictionary['key']   = lit_key_type
+                    self.empty_dictionary['value'] = lit_dict  
+                    
+                    vas = json.dumps(self.empty_dictionary)          
+                    #tree.create_node(key,sec_key,parent='parent_block',data=value)
+                    #tree.create_node(value,str(uuid.uuid4()),parent=sec_key,data=value)   
+                    print(vas)         
         tree.show()
                 
     def parse_json(self,file_path):
@@ -289,6 +358,6 @@ class scratch_processor:
         
 
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/test.sb3')
+scratch_processor_class.parse_json('json_files/complete_project.sb3')
 
 

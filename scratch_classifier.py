@@ -11,12 +11,45 @@ class scratch_classifier:
         self.parent_dict = {}
         self.type = ""
         self.raw = ""
+        
+
+class scratch_children:
+
+    def __init__(self,property,type):
+        self.property = property
+        self.type = type
+        
+    def get_children_property(self):
+        return self.property
+    
+    def get_children_type(self):
+        return self.type
+
+class scratch_literal:
+
+    def __init__(self,type,value):
+        self.type = type
+        self.value = value
+        self.raw = f"\{value}\""
+
+    def get_literal_type(self):
+        return self.type
+
+    def get_literal_value(self):
+        return self.value
+    
+    def get_literal_raw(self):
+        return self.raw
 
 class scratch_object():
         
     def __init__(self):
         self.type = None
         self.children = None
+        self.scratch_lit = None
+
+
+    
 
     def get_object_type(self):
         return self.type
@@ -24,22 +57,20 @@ class scratch_object():
     def get_object_children(self):
         return self.children
     
-    def navigate_type_value(self,val):
+    def navigate_type_value(self,type,val):
         
-        if isinstance(val,list):
-            return "Array"
-        elif isinstance(val,str) or isinstance(val,int) or isinstance(val,bool) or val is None:
-            return "Literal"
-        else:
-            return "Object"
+        #if isinstance(val,list):
+           # return "Array"
+        if isinstance(val,str) or isinstance(val,int) or isinstance(val,bool) or val is None:
+            self.scratch_lit = scratch_literal(type,val)
+            #print(self.scratch_lit)
+            return self.scratch_lit
+       # else:
+            #return "Object"
         
     def get_child_count(self,child_value):
         if isinstance(child_value,dict) or isinstance(child_value,list):
             return len(child_value)
-
-
-        
-
     
 class scratch_children:
 
@@ -97,21 +128,7 @@ class scratch_array:
     def get_array_children(self):
         return self.children
     
-class scratch_literal:
 
-    def __init__(self,type,value,raw):
-        self.type = type
-        self.value = value
-        self.raw = raw
-
-    def get_literal_type(self):
-        return self.type
-
-    def get_literal_value(self):
-        return self.value
-    
-    def get_literal_raw(self):
-        return self.raw
 
         
         
