@@ -141,12 +141,7 @@ class scratch_processor:
         elif isinstance(data,dict) and bool(data):
             for keys, values in data.items():
                print(keys)
-               print(self.unpack_all_dict(data[keys]) )
-              
-               #print(keys)
-        
-
-               
+               print(self.unpack_all_dict(data[keys]) )          
             
     def use_unpack(self, imp):
         key = self.unpack_all_dict(imp)
@@ -258,28 +253,6 @@ class scratch_processor:
         print(depth)
         return depth
 
-    def rev(self,val):
-        rev = ""
-        if val == ""  or len(val) == 1:
-            rev = val
-
-        for i in range(len(val)):
-           rev = val[i+1:] + val[i]
-           print(rev)
-        return rev
-    
-    def dec_bin(self,dec_num, result=""):
-        if dec_num == 0:
-            return result
-        
-        result = str(dec_num % 2) + result
-        print(result)
-        while dec_num != 0:
-            val = dec_num / 2
-        print(result)
-        print(val)
-        #return self.dec_bin(dec_num / 2, result)
-
     def get_blocks_recurs(self,json_data,target_match,block_match):
         
         
@@ -290,41 +263,23 @@ class scratch_processor:
                 if isinstance(each_data,dict) and bool(each_data):
                    empty_dict =  each_data[block_match] 
         return empty_dict
-                            
-
-    def classify_type(self,param):
-        emmitted_type = ""
-        if isinstance(param,int) or isinstance(param,str) or isinstance(param,bool):
-            emmitted_type = "Identifier"
-        elif isinstance(param,dict):
-            emmitted_type = "Object"
-        else:
-            emmitted_type = "Array"
-        return emmitted_type
-                            
+                                                        
     def rec_extr_dict(self,blocks):
         tree = Tree()
         scratch_objects = scratch_object()
         tree.create_node('','parent_block', data=blocks)
         if isinstance(blocks,dict) and bool(blocks):
             for key,value in blocks.items():
-                
+                ano_key = scratch_objects.navigate_type_value(value)
                 if isinstance(value,dict):
                    self.rec_extr_dict(value)
                 
                 else:
-                    sec_key =  str(uuid.uuid4())
-                    ano_key = scratch_objects.navigate_type_value(value)
-                    
+                    sec_key =  str(uuid.uuid4())                    
                     tree.create_node(ano_key,sec_key,parent='parent_block',data=value)
-                    tree.create_node(value,str(uuid.uuid4()),parent=sec_key,data=value)
-          
-                    
+                    tree.create_node(value,str(uuid.uuid4()),parent=sec_key,data=value)            
         tree.show()
-
-
-                 
-
+                
     def parse_json(self,file_path):
         string_to_parse2 = self.unpack_sb3(file_path)
         self.json_data = json.loads(string_to_parse2) 
@@ -333,18 +288,7 @@ class scratch_processor:
         self.rec_extr_dict(val)
         
 
-    
-    
-    
-
-
-    
-                 
-        
-        
-    
-
 scratch_processor_class = scratch_processor()
-scratch_processor_class.parse_json('json_files/complete_project.sb3')
+scratch_processor_class.parse_json('json_files/test.sb3')
 
 
